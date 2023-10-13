@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<div>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'appoint-readCSV' %}">
+        {% csrf_token %}
+        <input type="file" name="import_excel" id="import_excel">
+        <button type="submit">Submit</button>
+    </form>
+</div>
+{% endblock content %}
+
+
+  
