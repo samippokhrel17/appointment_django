@@ -1,10 +1,17 @@
 {% extends "blog/base.html" %}
 {% block content %}
-<div>
+<div class="card">
+    {% if msg %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ msg }}
+        </div>
+    {% endif %}
     <form method="POST" enctype="multipart/form-data" action="{% url 'appoint-readCSV' %}">
         {% csrf_token %}
-        <input type="file" name="import_excel" id="import_excel">
-        <button type="submit">Submit</button>
+        <label for="CSV">CSV File</label>
+        <input type="file" name="import_excel" id="import_excel" accept=".csv"
+               class="form-control">
+        <button class="btn btn-success mt-3" type="submit">Submit</button>
     </form>
 </div>
 {% endblock content %}

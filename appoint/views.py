@@ -1,7 +1,8 @@
 from django.shortcuts import render, HttpResponse
 from django.http import HttpResponse 
 import io, csv
-from mysite.appoint.models import Branch
+from .models import Appoinment,Branch
+# from mysite.appoint.models import Branchpy
 
 
 # Create your views here.
@@ -42,14 +43,61 @@ def files(request):
     return render(request,'blog/files.html')
 
 def readCSV(request):
-    file = io.TextIOWrapper(request.FILES['import_excel'].file)
-    appointment = csv.DictReader(file)
-    list_of_dict = list(appointment)
-    branches = Branch.object.all()
-    for branch in branches:
-        x = appointment.object.filter(branch = branch)
-        print(x)
+    try:
+        file = io.TextIOWrapper(request.FILES['import_excel'].file)
+        appointment = csv.DictReader(file)
+        appointment_list = list(appointment)
+
+        branches = Branch.objects.all()
+        for branch in branches:
+            appointment_count = Appoinment.objects.filter(branch=branch, is_cancel=False, is_complete=False).count()
+            remaining_appoinment = 2 - appointment_count
+            print(appointment_count,f"branch={branch}")
+
+            branch_app = appointment_list[:remaining_appoinment]
+            appointment_list = appointment_list[remaining_appoinment:]
+
+            objs = [
+                Appoinment(
+                    name=row['name'],
+                    location=row['location'],
+                    branch=branch,
+                    is_cancel=False,
+                    is_complete=False
+                )
+                for row in branch_app
+            ]
+            try:
+                Appoinment.objects.bulk_create(objs)
+            except Exception as e:
+                print(e)
+
+        context = {
+            "msg": "Success"
+        }
+    except Exception as e:
+        print(e)
+        context = {
+            "msg": e
+        }
+    return render(request, 'blog/files.html', context=context)
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # objs = [
     #     Member(
