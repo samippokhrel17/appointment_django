@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+
+{% block branding %}
+<div id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></div>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+<br><br>
+<a  style="margin-left: 16px;" href="{% url 'appoint-files' %}">Import Files</a> 
+{% endblock %}
+
+
+
+{% block nav-global %}{% endblock %}

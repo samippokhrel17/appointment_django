@@ -10,6 +10,7 @@ urlpatterns = [
     path('contact/',views.contact,name='appoint-contact'),
     path('files/',views.files,name='appoint-files'),
     path('readCSV',views.readCSV,name='appoint-readCSV'),
+    
 
 ]
  

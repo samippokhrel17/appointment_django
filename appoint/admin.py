@@ -23,5 +23,16 @@ class Member(admin.ModelAdmin):
 
 @admin.register(Branch)
 class Branch(admin.ModelAdmin):
-    # list_display = ('name', 'location', 'branch', 'is_complete')
+    list_display = ('name','limit', 'assign', 'complete' , 'slot_available',)
+
+    def assign(self, obj):
+        return Appoinment.objects.filter(branch=obj).count()
+    
+    def complete(self,obj):
+        return Appoinment.objects.filter(branch=obj,is_complete=True).count()
+    
+    def slot_available(self,obj):
+        return obj.limit-(self.assign(obj)-self.complete(obj))
+   
+
     inlines=[AppointmentInline]
